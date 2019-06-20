@@ -1,9 +1,18 @@
-import { Dashboard, Person } from '@material-ui/icons';
+import {
+  Dashboard,
+  Person,
+  Code,
+  Equalizer,
+  Assignment,
+  School
+} from '@material-ui/icons';
 import DashboardPage from '../views/Dashboard/Dashboard';
 
 import UserProfile from '../views/UserProfile/UserProfile';
-import Formation from '../views/Formation/Formation';
+import Training from '../views/Trainings/Training';
 import Project from '../views/Projects/Projects';
+import Education from '../views/Education/Education';
+import Skills from '../views/Skills/Skills';
 
 export type Route = typeof dashboardRoutes[0];
 const dashboardRoutes = [
@@ -22,18 +31,32 @@ const dashboardRoutes = [
     component: UserProfile
   },
   {
-    path: '/formation',
-    sidebarName: 'Formation',
-    navbarName: 'Formation',
-    icon: Person,
-    component: Formation
+    path: '/training',
+    sidebarName: 'Training',
+    navbarName: 'Training',
+    icon: Assignment,
+    component: Training
   },
   {
     path: '/projects',
     sidebarName: 'Projects',
     navbarName: 'Projects',
-    icon: Person,
+    icon: Equalizer,
     component: Project
+  },
+  {
+    path: '/education',
+    sidebarName: 'Education',
+    navbarName: 'Education',
+    icon: School,
+    component: Education
+  },
+  {
+    path: '/skills',
+    sidebarName: 'Skills',
+    navbarName: 'Skills',
+    icon: Code,
+    component: Skills
   },
   {
     path: '/',

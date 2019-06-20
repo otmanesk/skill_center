@@ -9,30 +9,39 @@ type User {
   gender: String
   birthday: String
   email :  String
-  formations : [ Formation ]
+  availability : String
+  phone : String
+  address : String
+  avatarUrl : String
+  trainings : [ Training ]
   projects:[Project]
-  formationsfollowed:[ Formation ]
+  education : [Education]
+  skills : [Skill]
+  trainingsFollowed:[ Training ]
 
 }
-type Formation{
+
+type Training{
       id: String
       name: String
-      Type: String
-      Site: String
-      EndDate: String
-      Rank: String
+      type: String
+      site: String
+      endDate: String
+      rank: String
       startDate: String
-      Formateur: String
+      former: String
+      
 }
-input  FormationInput{
+
+input  TrainingInput{
   id: String
   name: String
-  Type: String
-  Site: String
-  EndDate: String
-  Rank: String
+  type: String
+  site: String
+  endDate: String
+  rank: String
   startDate: String
-  Formateur: String
+  former: String
 }
 
 type Project{
@@ -42,11 +51,11 @@ type Project{
   technology: String
   society: String
   size: String
-  Site: String
+  site: String
   startDate: String
-  EndDate: String
+  endDate: String
   status: String
-  Progress: String
+  progress: String
 }
 input  ProjectInput{
   id: String
@@ -55,12 +64,40 @@ input  ProjectInput{
   technology: String
   society: String
   size: String
-  Site: String
+  site: String
   startDate: String
-  EndDate: String
+  endDate: String
   status: String
-  Progress: String
+  progress: String
 }
+type Skill{
+  id: String,
+  name : String,
+  value : String
+}
+input SkillInput{
+  id: String,
+  name: String,
+  value: String
+}
+type Education{
+  id: String,
+  school: String,
+  diploma: String,
+  university: String,
+  trainings: String,
+  certification : String
+}
+input EducationInput{
+
+  id: String,
+  school: String,
+  diploma: String,
+  university: String,
+  trainings: String,
+  certification : String
+}
+
 type Query {
   allUsers: [User!]!
   User(id :String):User
@@ -75,9 +112,12 @@ type Mutation {
     gender: String!,
     birthday: String!,
     email :  String!,
+    availability : String!,
+    phone : String!,
+    address : String!
     ):User!
 
-  addFormation( 
+  addTraining( 
     id:String!, 
     name: String,
     username : String,
@@ -86,14 +126,14 @@ type Mutation {
     gender: String,
     birthday: String,
     email :  String,
-    formations : [FormationInput]):User!
+    trainings : [TrainingInput]):User!
     
-    updateFormation(id:String!,formations:[FormationInput]):User!
+    updateTraining(id:String!, trainings:[TrainingInput]):User!
 
     
-    deleteFormation(id:String!,formations:[FormationInput]):User!
+    deleteTraining(id:String!, trainings:[TrainingInput]):User!
 
-    addFormationfollowed( 
+    addTrainingFollowed( 
       id:String!, 
       name: String,
       username : String,
@@ -102,9 +142,9 @@ type Mutation {
       gender: String,
       birthday: String,
       email :  String,
-      formationsfollowed : [FormationInput]):User!
+      trainingsFollowed : [TrainingInput]):User!
 
-      deleteFormationfollowed(id:String!,formationsfollowed:[FormationInput]):User!
+      deleteTrainingFollowed(id:String!, trainingsFollowed:[TrainingInput]):User!
 
     
     addProject( 
@@ -118,11 +158,30 @@ type Mutation {
       email :  String,
       projects : [ProjectInput]):User!
       
-      updateProject(id:String!,projects:[ProjectInput]):User!
+      updateProject(id:String!, projects:[ProjectInput]):User!
 
     
-      deleteProject(id:String!,projects:[ProjectInput]):User!
-  
+      deleteProject(id:String!, projects:[ProjectInput]):User!
+    addEducation(
+      id: String,
+      school: String,
+      diploma: String,
+      university: String,
+      trainings: String,
+      certification : String,
+      education : [EducationInput]):User!
 
+      updateEducation(id:String!, education:[EducationInput]):User!
+
+      deleteEducation(id:String!, education:[EducationInput]):User!
+
+    addSkill(
+      id: String,
+      name: String,
+      value: String,
+      skills:[SkillInput]):User!,
+      updateSkill(id:String!,skills:[SkillInput]):User!,
+      deleteSkill(id:String!,skills:[SkillInput]):User!
+        
   }
 `;

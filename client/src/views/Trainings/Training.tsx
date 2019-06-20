@@ -9,24 +9,24 @@ import Modal from 'react-awesome-modal';
 import { Table } from '../../components';
 import Popup from 'reactjs-popup';
 
-const DELETE_FORMATION = gql`
-  mutation deleteFormation($id: String!, $formations: [FormationInput]) {
-    deleteFormation(id: $id, formations: $formations) {
+const DELETE_TRAINING = gql`
+  mutation deleteTraining($id: String!, $trainings: [TrainingInput]) {
+    deleteTraining(id: $id, trainings: $trainings) {
       id
       name
     }
   }
 `;
-const Update_FORMATION = gql`
-  mutation updateFormation($id: String!, $formations: [FormationInput]) {
-    updateFormation(id: $id, formations: $formations) {
-      formations {
+const Update_TRAINING = gql`
+  mutation updateTraining($id: String!, $trainings: [TrainingInput]) {
+    updateTraining(id: $id, trainings: $trainings) {
+      trainings {
         id
         name
         Type
         Site
         Rank
-        Formateur
+        former
         startDate
         EndDate
       }
@@ -37,13 +37,13 @@ const GET_USERS = gql`
   query User($Id: String) {
     User(id: $Id) {
       id
-      formations {
+      trainings {
         id
         name
         Type
         Site
         Rank
-        Formateur
+        former
         startDate
         EndDate
       }
@@ -51,16 +51,16 @@ const GET_USERS = gql`
   }
 `;
 
-const ADD_FORMATION = gql`
-  mutation addFormation($id: String!, $formations: [FormationInput]) {
-    addFormation(id: $id, formations: $formations) {
-      formations {
+const ADD_TRAINING = gql`
+  mutation addTraining($id: String!, $trainings: [TrainingInput]) {
+    addTraining(id: $id, trainings: $trainings) {
+      trainings {
         id
         name
         Type
         Site
         Rank
-        Formateur
+        former
         startDate
         EndDate
       }
@@ -68,7 +68,7 @@ const ADD_FORMATION = gql`
   }
 `;
 
-class Formation extends Component<any, any> {
+class Training extends Component<any, any> {
   static propTypes: {
     auth: PropTypes.Validator<object>;
   };
@@ -92,14 +92,14 @@ class Formation extends Component<any, any> {
   }
 
   render() {
-    let name, Type, Site, Rank, startDate, Formateur, EndDate;
+    let name, Type, Site, Rank, startDate, former, EndDate;
 
     return (
       <div>
         <Grid container>
           <ItemGrid xs={12} sm={12} md={12}>
             <RegularCard
-              cardTitle="Edit Formation"
+              cardTitle="Edit Training"
               content={
                 <div>
                   <Grid item xs={12} container>
@@ -112,20 +112,20 @@ class Formation extends Component<any, any> {
                         if (error) return `Error! ${error.message}`;
                         return (
                           <Mutation
-                            mutation={ADD_FORMATION}
+                            mutation={ADD_TRAINING}
                             key={data.User.id}
                             onCompleted={() =>
-                              this.props.history.push(`/Formation`)
+                              this.props.history.push(`/training`)
                             }
                           >
-                            {(addFormation, { loading, error }) => (
+                            {(addTraining, { loading, error }) => (
                               <>
                                 <Button
                                   color="primary"
                                   round
                                   onClick={() => this.openModal()}
                                 >
-                                  Add Formation
+                                  Add Training
                                 </Button>
                                 <Modal
                                   visible={this.state.visible}
@@ -140,16 +140,16 @@ class Formation extends Component<any, any> {
                                         <form
                                           onSubmit={e => {
                                             e.preventDefault();
-                                            addFormation({
+                                            addTraining({
                                               variables: {
                                                 id: data.User.id,
-                                                formations: {
+                                                trainings: {
                                                   name: name.value,
                                                   Type: Type.value,
                                                   Site: Site.value,
                                                   Rank: Rank.value,
                                                   startDate: startDate.value,
-                                                  Formateur: Formateur.value,
+                                                  former: former.value,
                                                   EndDate: EndDate.value
                                                 }
                                               },
@@ -162,7 +162,7 @@ class Formation extends Component<any, any> {
                                             Site.value = '';
                                             Rank.value = '';
                                             startDate.value = '';
-                                            Formateur.value = '';
+                                            former.value = '';
                                             EndDate.value = '';
                                           }}
                                         >
@@ -230,17 +230,17 @@ class Formation extends Component<any, any> {
                                             />
                                           </div>
                                           <div className="form-group">
-                                            <label htmlFor="Formateur">
-                                              Formateur:
+                                            <label htmlFor="former">
+                                              former:
                                             </label>
                                             <input
                                               type="text"
                                               className="form-control"
-                                              name="Formateur"
+                                              name="former"
                                               ref={node => {
-                                                Formateur = node;
+                                                former = node;
                                               }}
-                                              placeholder="Formateur"
+                                              placeholder="former"
                                             />
                                           </div>
                                           <div className="form-group">
@@ -263,7 +263,7 @@ class Formation extends Component<any, any> {
                                             type="submit"
                                             onClick={() => this.closeModal()}
                                           >
-                                            Add Formation
+                                            Add Training
                                           </Button>
                                           <Button
                                             color="primary"
@@ -296,7 +296,7 @@ class Formation extends Component<any, any> {
                       {({ loading, error, data }) => {
                         if (loading) return 'Loading...';
                         if (error) return `Error! ${error.message}`;
-                        var fo = data.User.formations;
+                        var fo = data.User.trainings;
 
                         var array = fo.map(item =>
                           Object.keys(item).map(function(_) {
@@ -309,16 +309,16 @@ class Formation extends Component<any, any> {
                           const rank = item[2];
                           const type = item[3];
                           const site = item[4];
-                          const formateur = item[5];
+                          let former = item[5];
                           item.push(
                             <Mutation
-                              mutation={Update_FORMATION}
+                              mutation={Update_TRAINING}
                               key={data.User.id}
                               onCompleted={() =>
-                                this.props.history.push('/Formation')
+                                this.props.history.push('/training')
                               }
                             >
-                              {(updateFormation, { loading, error }) => (
+                              {(updateTraining, { loading, error }) => (
                                 <>
                                   <Popup
                                     open={false}
@@ -339,10 +339,10 @@ class Formation extends Component<any, any> {
                                               <form
                                                 onSubmit={e => {
                                                   e.preventDefault();
-                                                  updateFormation({
+                                                  updateTraining({
                                                     variables: {
                                                       id: data.User.id,
-                                                      formations: {
+                                                      trainings: {
                                                         id: id,
                                                         name: name.value,
                                                         Type: Type.value,
@@ -350,8 +350,7 @@ class Formation extends Component<any, any> {
                                                         Rank: Rank.value,
                                                         startDate:
                                                           startDate.value,
-                                                        Formateur:
-                                                          Formateur.value,
+                                                        former: former.value,
                                                         EndDate: EndDate.value
                                                       }
                                                     }
@@ -363,7 +362,7 @@ class Formation extends Component<any, any> {
                                                   Site.value = '';
                                                   Rank.value = '';
                                                   startDate.value = '';
-                                                  Formateur.value = '';
+                                                  former.value = '';
                                                   EndDate.value = '';
                                                   close();
                                                 }}
@@ -424,23 +423,23 @@ class Formation extends Component<any, any> {
                                                     ref={node => {
                                                       Rank = node;
                                                     }}
-                                                  placeholder="Rank"
+                                                    placeholder="Rank"
                                                     defaultValue={rank.toString()}
                                                   />
                                                 </div>
                                                 <div className="form-group">
-                                                  <label htmlFor="Formateur">
-                                                    Formateur:
+                                                  <label htmlFor="former">
+                                                    former:
                                                   </label>
                                                   <input
                                                     type="text"
                                                     className="form-control"
-                                                    name="Formateur"
+                                                    name="former"
                                                     ref={node => {
-                                                      Formateur = node;
+                                                      former = node;
                                                     }}
-                                                    placeholder="Formateur"
-                                                    defaultValue={formateur.toString()}
+                                                    placeholder="former"
+                                                    defaultValue={former.toString()}
                                                   />
                                                 </div>
                                                 <div className="form-group">
@@ -498,21 +497,21 @@ class Formation extends Component<any, any> {
                               )}
                             </Mutation>,
                             <Mutation
-                              mutation={DELETE_FORMATION}
+                              mutation={DELETE_TRAINING}
                               key={data.User.id}
                               onCompleted={() =>
-                                this.props.history.push('/Formation')
+                                this.props.history.push('/training')
                               }
                             >
-                              {(deleteFormation, { loading, error }) => (
+                              {(deleteTraining, { loading, error }) => (
                                 <div>
                                   <form
                                     onSubmit={e => {
                                       e.preventDefault();
-                                      deleteFormation({
+                                      deleteTraining({
                                         variables: {
                                           id: data.User.id,
-                                          formations: {
+                                          trainings: {
                                             id: id.toString()
                                           }
                                         }
@@ -549,7 +548,7 @@ class Formation extends Component<any, any> {
                                 'Type',
                                 'Site',
                                 'Rank',
-                                'Formateur',
+                                'former',
                                 'actions'
                               ]}
                               tableData={array}
@@ -569,11 +568,11 @@ class Formation extends Component<any, any> {
   }
 }
 
-Formation.propTypes = {
+Training.propTypes = {
   auth: PropTypes.object.isRequired
 };
 const mapStateToProps = state => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps)(Formation);
+export default connect(mapStateToProps)(Training);

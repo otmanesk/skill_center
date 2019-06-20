@@ -1,38 +1,39 @@
 import { Grid, withStyles, Paper } from '@material-ui/core';
-import {
-  Accessibility,
-  ContentCopy,
-  DateRange,
-  InfoOutline,
-  LocalOffer,
-  Store,
-  Update,
-  Warning
-} from '@material-ui/icons';
+
 import dashboardStyle from '../../assets/jss/material-dashboard-react/dashboardStyle';
-import { ItemGrid, RegularCard, StatsCard } from '../../components';
+import { ItemGrid, RegularCard, Snackbar } from '../../components';
 import * as React from 'react';
 import { Query, Mutation } from 'react-apollo';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 import { gql } from 'apollo-boost';
-import { Table, Snackbar, Button } from '../../components';
+import { Table, Button } from '../../components';
+import Training from '../../components/stats/Trainings';
+import Display from '../../components/react-images/Display';
+import Activity from '../../components/Charts/Activity/Activity';
+import RangeSliderBar from '../../components/rangeSliderBar/RangeSliderBar';
+import Bar from '../../components/Charts/Bar/Bar';
+import SpiderWeb from '../../components/Charts/Spiderweb/Spiderweb';
+import Donut from '../../components/Charts/Donut/Donut';
+import Facet from '../../components/Facet/Facet';
+import FacetHeader from '../../components/Facet/FacetHeader';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Popup from 'reactjs-popup';
-const ADD_FORMATION = gql`
-  mutation addFormationfollowed(
+
+const ADD_TRAINING = gql`
+  mutation addTrainingFollowed(
     $id: String!
-    $formationsfollowed: [FormationInput]
+    $trainingsFollowed: [TrainingInput]
   ) {
-    addFormationfollowed(id: $id, formationsfollowed: $formationsfollowed) {
-      formationsfollowed {
+    addTrainingFollowed(id: $id, trainingsFollowed: $trainingsFollowed) {
+      trainingsFollowed {
         id
         name
         Type
         Site
         Rank
-        Formateur
+        former
         startDate
         EndDate
       }
@@ -46,19 +47,19 @@ const GET_USERS = gql`
       name
       username
       email
-      formations {
+      trainings {
         id
         name
         Type
         Site
-        Formateur
+        former
       }
-      formationsfollowed {
+      trainingsFollowed {
         id
         name
         Type
         Site
-        Formateur
+        former
       }
     }
   }
@@ -87,52 +88,34 @@ class Dashboard extends React.Component<Props & any, any> {
   }
 
   render() {
-    //  const { classes } = this.props;
     return (
       <div>
         <Grid container>
-          <ItemGrid xs={12} sm={6} md={3}>
-            <StatsCard
-              icon={ContentCopy}
-              iconColor="orange"
-              title="Used Space"
-              description="49/50"
-              small="GB"
-              statIcon={Warning}
-              statIconColor="danger"
-              statLink={{ text: 'Get More Space...', href: '#pablo' }}
-            />
+          <ItemGrid xs={12} sm={12} md={12}>
+            <Display />
           </ItemGrid>
-          <ItemGrid xs={12} sm={6} md={3}>
-            <StatsCard
-              icon={Store}
-              iconColor="green"
-              title="Revenue"
-              description="$34,245"
-              statIcon={DateRange}
-              statText="Last 24 Hours"
-            />
+        </Grid>
+
+        <Grid container>
+          <ItemGrid xs={11} sm={11} md={4}>
+            <Activity />
           </ItemGrid>
-          <ItemGrid xs={12} sm={6} md={3}>
-            <StatsCard
-              icon={InfoOutline}
-              iconColor="red"
-              title="Fixed Issues"
-              description="75"
-              statIcon={LocalOffer}
-              statText="Tracked from Github"
-            />
+          <ItemGrid xs={12} sm={12} md={4}>
+            <SpiderWeb />
           </ItemGrid>
-          <ItemGrid sm={6} md={3}>
-            <StatsCard
-              icon={Accessibility}
-              iconColor="blue"
-              title="Followers"
-              description="+245"
-              statIcon={Update}
-              statText="Just Updated"
-            />
+          <ItemGrid xs={12} sm={12} md={4}>
+            <Bar />
           </ItemGrid>
+          <Grid container>
+            <Facet>
+              <FacetHeader title="Ranking">
+                <RangeSliderBar />
+              </FacetHeader>
+            </Facet>
+          </Grid>
+        </Grid>
+        <Grid container>
+          <Training />
         </Grid>
 
         <Grid container>
@@ -177,14 +160,15 @@ class Dashboard extends React.Component<Props & any, any> {
                   {({ loading, error, data }) => {
                     if (loading) return 'Loading...';
                     if (error) return `Error! ${error.message}`;
-                    var fo = data.allUsers;
-                    var forma = fo.map(item => item.formations);
+                    const fo = data.allUsers;
+                    const forma = fo.map(item => item.trainings);
+                    console.log(forma);
                     const er = [];
                     forma.map(x =>
                       x.map(y => {
                         const btn = (
-                          <Mutation mutation={ADD_FORMATION} key={y.id}>
-                            {(addFormationfollowed, { loading, error }) => (
+                          <Mutation mutation={ADD_TRAINING} key={y.id}>
+                            {(addTrainingFollowed, { loading, error }) => (
                               <>
                                 <Popup
                                   open={false}
@@ -204,15 +188,15 @@ class Dashboard extends React.Component<Props & any, any> {
                                           <form
                                             onSubmit={e => {
                                               e.preventDefault();
-                                              addFormationfollowed({
+                                              addTrainingFollowed({
                                                 variables: {
                                                   id: this.props.auth.user.id,
-                                                  formationsfollowed: {
+                                                  trainingsfollowed: {
                                                     id: y.id,
                                                     name: y.name,
                                                     Type: y.Type,
                                                     Site: y.Site,
-                                                    Formateur: y.Formateur
+                                                    former: y.former
                                                   }
                                                 }
                                               }).then(() => {
@@ -289,7 +273,6 @@ class Dashboard extends React.Component<Props & any, any> {
                             close
                           />
                         </Grid>
-                        ;
                       </>
                     );
                   }}

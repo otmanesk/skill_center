@@ -1,5 +1,5 @@
 import { Grid, Paper } from '@material-ui/core';
-import { Button, ItemGrid, RegularCard,Table } from '../../components';
+import { Button, ItemGrid, RegularCard, Table } from '../../components';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -17,7 +17,7 @@ const GET_USERS = gql`
         name
         description
         technology
-        society
+
         size
         Site
         startDate
@@ -36,7 +36,7 @@ const ADD_PROJECT = gql`
         name
         description
         technology
-        society
+
         size
         Site
         startDate
@@ -47,7 +47,7 @@ const ADD_PROJECT = gql`
     }
   }
 `;
-const DELETE_FORMATION = gql`
+const DELETE_PROJECT = gql`
   mutation deleteProject($id: String!, $projects: [ProjectInput]) {
     deleteProject(id: $id, projects: $projects) {
       id
@@ -55,7 +55,7 @@ const DELETE_FORMATION = gql`
     }
   }
 `;
-const Update_FORMATION = gql`
+const Update_PROJECT = gql`
   mutation updateProject($id: String!, $projects: [ProjectInput]) {
     updateProject(id: $id, projects: $projects) {
       projects {
@@ -63,7 +63,7 @@ const Update_FORMATION = gql`
         name
         description
         technology
-        society
+
         size
         Site
         startDate
@@ -98,7 +98,15 @@ class Project extends Component<any, any> {
   }
 
   render() {
-    let name, description, Site, technology, startDate, society, EndDate,size,status,Progress;
+    let name,
+      description,
+      Site,
+      technology,
+      startDate,
+      EndDate,
+      size,
+      status,
+      Progress;
 
     return (
       <div>
@@ -140,10 +148,7 @@ class Project extends Component<any, any> {
                                   effect="fadeInUp"
                                   onClickAway={() => this.closeModal()}
                                 >
-                             
-                             
-                             
-                                 <div className="container">
+                                  <div className="container">
                                     <div className="panel panel-default">
                                       <div className="panel-body">
                                         <form
@@ -157,27 +162,26 @@ class Project extends Component<any, any> {
                                                   description:
                                                     description.value,
                                                   Site: Site.value,
-                                                  size:size.value,
-                                                  status:status.value,
+                                                  size: size.value,
+                                                  status: status.value,
                                                   technology: technology.value,
                                                   startDate: startDate.value,
-                                                  society: society.value,
+
                                                   EndDate: EndDate.value,
-                                                  Progress:Progress.value
+                                                  Progress: Progress.value
                                                 }
                                               }
-                                            })
+                                            });
                                             name.value = '';
                                             description.value = '';
                                             Site.value = '';
                                             technology.value = '';
                                             startDate.value = '';
-                                            society.value = '';
-                                            EndDate.value = '';
-                                            status.value='';
-                                            size.value='';
-                                            Progress.value='';
 
+                                            EndDate.value = '';
+                                            status.value = '';
+                                            size.value = '';
+                                            Progress.value = '';
                                           }}
                                         >
                                           <br />
@@ -247,24 +251,9 @@ class Project extends Component<any, any> {
                                               placeholder="startDate"
                                             />
                                           </div>
+
                                           <div className="form-group">
-                                            <label htmlFor="society">
-                                              society:
-                                            </label>
-                                            <input
-                                              type="text"
-                                              className="form-control"
-                                              name="society"
-                                              ref={node => {
-                                                society = node;
-                                              }}
-                                              placeholder="society"
-                                            />
-                                          </div>
-                                          <div className="form-group">
-                                            <label htmlFor="size">
-                                            size:
-                                            </label>
+                                            <label htmlFor="size">size:</label>
                                             <input
                                               type="text"
                                               className="form-control"
@@ -277,7 +266,7 @@ class Project extends Component<any, any> {
                                           </div>
                                           <div className="form-group">
                                             <label htmlFor="status">
-                                            status:
+                                              status:
                                             </label>
                                             <input
                                               type="text"
@@ -305,7 +294,7 @@ class Project extends Component<any, any> {
                                           </div>
                                           <div className="form-group">
                                             <label htmlFor="EndDate">
-                                              EndDate:
+                                              Progress :
                                             </label>
                                             <input
                                               type="text"
@@ -322,7 +311,6 @@ class Project extends Component<any, any> {
                                             round
                                             type="submit"
                                             onClick={() => this.closeModal()}
-
                                           >
                                             Add Project
                                           </Button>
@@ -330,7 +318,7 @@ class Project extends Component<any, any> {
                                             color="primary"
                                             round
                                             onClick={() => this.closeModal()}
-                                        >
+                                          >
                                             Close{' '}
                                           </Button>
                                         </form>
@@ -366,21 +354,20 @@ class Project extends Component<any, any> {
                           })
                         );
                         array.map(item => {
-                          const id = item[0];
-                          const nom = item[1];
-                          const descr = item[2];
-                          const site = item[3];
-                          const techno = item[4];
-                          const soci = item[5];
-                          const siz = item[6];
-                          const endDate = item[7];
-                          const startdate = item[8];
-                          const stat = item[9];
-                          const Prog = item[10];
+                          let id = item[0];
+                          let nom = item[1];
+                          let description = item[2];
+                          let site = item[3];
+                          let technology = item[4];
+                          let size = item[5];
+                          let endDate = item[6];
+                          let startDate = item[7];
+                          let status = item[8];
+                          let progress = item[9];
 
                           item.push(
                             <Mutation
-                              mutation={Update_FORMATION}
+                              mutation={Update_PROJECT}
                               key={data.User.id}
                               onCompleted={() =>
                                 this.props.history.push('/projects')
@@ -411,190 +398,173 @@ class Project extends Component<any, any> {
                                                     variables: {
                                                       id: data.User.id,
                                                       projects: {
-                                                        id:id,
+                                                        id: id,
                                                         name: name.value,
                                                         description:
                                                           description.value,
-                                                        Site: Site.value,
-                                                        size:size.value,
-                                                        status:status.value,
-                                                        technology: technology.value,
-                                                        startDate: startDate.value,
-                                                        society: society.value,
-                                                        EndDate: EndDate.value,
-                                                        Progress:Progress.value
+                                                        site: Site.value,
+                                                        size: size.value,
+                                                        status: status.value,
+                                                        technology:
+                                                          technology.value,
+                                                        startDate:
+                                                          startDate.value,
+
+                                                        endDate: endDate.value,
+                                                        progress: progress.value
                                                       }
                                                     }
                                                   }).then(() => {
                                                     close();
                                                   });
                                                   name.value = '';
-                                            description.value = '';
-                                            Site.value = '';
-                                            technology.value = '';
-                                            startDate.value = '';
-                                            society.value = '';
-                                            EndDate.value = '';
-                                            status.value='';
-                                            size.value='';
-                                            Progress.value='';
+                                                  description.value = '';
+                                                  Site.value = '';
+                                                  technology.value = '';
+                                                  startDate.value = '';
+
+                                                  endDate.value = '';
+                                                  status.value = '';
+                                                  size.value = '';
+                                                  progress.value = '';
                                                 }}
                                               >
-                                                              <br />
-                                          <div className="form-group">
-                                            <label htmlFor="name">name:</label>
-                                            <input
-                                              type="text"
-                                              className="form-control"
-                                              name="name"
-                                              ref={node => {
-                                                name = node;
-                                              }}
-                                              placeholder="name"
-                                              defaultValue={nom.toString()}
+                                                <br />
+                                                <div className="form-group">
+                                                  <label htmlFor="name">
+                                                    name:
+                                                  </label>
+                                                  <input
+                                                    type="text"
+                                                    className="form-control"
+                                                    name="name"
+                                                    ref={node => {
+                                                      name = node;
+                                                    }}
+                                                    placeholder="name"
+                                                    defaultValue={nom.toString()}
+                                                  />
+                                                </div>
+                                                <div className="form-group">
+                                                  <label htmlFor="description">
+                                                    description:
+                                                  </label>
+                                                  <input
+                                                    type="text"
+                                                    className="form-control"
+                                                    name="description"
+                                                    ref={node => {
+                                                      description = node;
+                                                    }}
+                                                    placeholder="description"
+                                                  />
+                                                </div>
 
-                                            />
-                                          </div>
-                                          <div className="form-group">
-                                            <label htmlFor="description">
-                                              description:
-                                            </label>
-                                            <input
-                                              type="text"
-                                              className="form-control"
-                                              name="description"
-                                              ref={node => {
-                                                description = node;
-                                              }}
-                                              placeholder="description"
-                                              defaultValue={descr.toString()}
+                                                <div className="form-group">
+                                                  <label htmlFor="Site">
+                                                    Site:
+                                                  </label>
+                                                  <input
+                                                    className="form-control"
+                                                    name="Site"
+                                                    ref={node => {
+                                                      Site = node;
+                                                    }}
+                                                    placeholder="Site"
+                                                    defaultValue={site.toString()}
+                                                  />
+                                                </div>
+                                                <div className="form-group">
+                                                  <label htmlFor="technology">
+                                                    technology:
+                                                  </label>
+                                                  <input
+                                                    type="text"
+                                                    className="form-control"
+                                                    name="technology"
+                                                    ref={node => {
+                                                      technology = node;
+                                                    }}
+                                                    placeholder="technology"
+                                                    defaultValue={technology.toString()}
+                                                  />
+                                                </div>
+                                                <div className="form-group">
+                                                  <label htmlFor="startDate">
+                                                    startDate:
+                                                  </label>
+                                                  <input
+                                                    type="text"
+                                                    className="form-control"
+                                                    name="startDate"
+                                                    ref={node => {
+                                                      startDate = node;
+                                                    }}
+                                                    placeholder="startDate"
+                                                    defaultValue={startDate.toString()}
+                                                  />
+                                                </div>
 
-                                            />
-                                          </div>
-
-                                          <div className="form-group">
-                                            <label htmlFor="Site">Site:</label>
-                                            <input
-                                              className="form-control"
-                                              name="Site"
-                                              ref={node => {
-                                                Site = node;
-                                              }}
-                                              placeholder="Site"
-                                              defaultValue={site.toString()}
-
-                                            />
-                                          </div>
-                                          <div className="form-group">
-                                            <label htmlFor="technology">
-                                              technology:
-                                            </label>
-                                            <input
-                                              type="text"
-                                              className="form-control"
-                                              name="technology"
-                                              ref={node => {
-                                                technology = node;
-                                              }}
-                                              placeholder="technology"
-                                              defaultValue={techno.toString()}
-
-                                            />
-                                          </div>
-                                          <div className="form-group">
-                                            <label htmlFor="startDate">
-                                              startDate:
-                                            </label>
-                                            <input
-                                              type="text"
-                                              className="form-control"
-                                              name="startDate"
-                                              ref={node => {
-                                                startDate = node;
-                                              }}
-                                              placeholder="startDate"
-                                              defaultValue={startdate.toString()}
-
-                                            />
-                                          </div>
-                                          <div className="form-group">
-                                            <label htmlFor="society">
-                                              society:
-                                            </label>
-                                            <input
-                                              type="text"
-                                              className="form-control"
-                                              name="society"
-                                              ref={node => {
-                                                society = node;
-                                              }}
-                                              placeholder="society"
-                                              defaultValue={soci.toString()}
-                                            />
-                                          </div>
-                                          <div className="form-group">
-                                            <label htmlFor="size">
-                                            size:
-                                            </label>
-                                            <input
-                                              type="text"
-                                              className="form-control"
-                                              name="size"
-                                              ref={node => {
-                                                size = node;
-                                              }}
-                                              placeholder="size"
-                                              defaultValue={siz.toString()}
-
-                                            />
-                                          </div>
-                                          <div className="form-group">
-                                            <label htmlFor="status">
-                                            status:
-                                            </label>
-                                            <input
-                                              type="text"
-                                              className="form-control"
-                                              name="status"
-                                              ref={node => {
-                                                status = node;
-                                              }}
-                                              placeholder="status"
-                                              defaultValue={stat.toString()}
-                                            />
-                                          </div>
-                                          <div className="form-group">
-                                            <label htmlFor="EndDate">
-                                              EndDate:
-                                            </label>
-                                            <input
-                                              type="text"
-                                              className="form-control"
-                                              name="EndDate"
-                                              ref={node => {
-                                                EndDate = node;
-                                              }}
-                                              placeholder="EndDate"
-                                              defaultValue={endDate.toString()}
-
-                                            />
-                                          </div>
-                                          <div className="form-group">
-                                            <label htmlFor="Progress">
-                                            Progress:
-                                            </label>
-                                            <input
-                                              type="text"
-                                              className="form-control"
-                                              name="Progress"
-                                              ref={node => {
-                                                Progress = node;
-                                              }}
-                                              placeholder="Progress"
-                                              defaultValue={Prog.toString()}
-
-                                            />
-                                          </div>
+                                                <div className="form-group">
+                                                  <label htmlFor="size">
+                                                    size:
+                                                  </label>
+                                                  <input
+                                                    type="text"
+                                                    className="form-control"
+                                                    name="size"
+                                                    ref={node => {
+                                                      size = node;
+                                                    }}
+                                                    placeholder="size"
+                                                    defaultValue={size.toString()}
+                                                  />
+                                                </div>
+                                                <div className="form-group">
+                                                  <label htmlFor="status">
+                                                    status:
+                                                  </label>
+                                                  <input
+                                                    type="text"
+                                                    className="form-control"
+                                                    name="status"
+                                                    ref={node => {
+                                                      status = node;
+                                                    }}
+                                                    placeholder="status"
+                                                    defaultValue={status.toString()}
+                                                  />
+                                                </div>
+                                                <div className="form-group">
+                                                  <label htmlFor="EndDate">
+                                                    EndDate:
+                                                  </label>
+                                                  <input
+                                                    type="text"
+                                                    className="form-control"
+                                                    name="EndDate"
+                                                    ref={node => {
+                                                      endDate = node;
+                                                    }}
+                                                    placeholder="EndDate"
+                                                    defaultValue={endDate.toString()}
+                                                  />
+                                                </div>
+                                                <div className="form-group">
+                                                  <label htmlFor="Progress">
+                                                    Progress:
+                                                  </label>
+                                                  <input
+                                                    type="text"
+                                                    className="form-control"
+                                                    name="Progress"
+                                                    ref={node => {
+                                                      progress = node;
+                                                    }}
+                                                    placeholder="Progress"
+                                                    defaultValue={progress.toString()}
+                                                  />
+                                                </div>
                                                 <Button
                                                   color="primary"
                                                   round
@@ -621,41 +591,41 @@ class Project extends Component<any, any> {
                                 </>
                               )}
                             </Mutation>,
-                           <Mutation
-                           mutation={DELETE_FORMATION}
-                           key={data.User.id}
-                           onCompleted={() =>
-                             this.props.history.push('/projects')
-                           }
-                         >
-                           {(deleteProject, { loading, error }) => (
-                             <div>
-                               <form
-                                 onSubmit={e => {
-                                   e.preventDefault();
-                                   deleteProject({
-                                     variables: {
-                                       id: data.User.id,
-                                       projects: {
-                                         id: id.toString()
-                                       }
-                                     }
-                                   });
-                                 }}
-                               >
-                                 &nbsp;
-                                 <button
-                                   type="submit"
-                                   className="btn btn-danger"
-                                 >
-                                   Delete
-                                 </button>
-                               </form>
-                               {loading && <p>Loading...</p>}
-                               {error && <p>Error :( Please try again</p>}
-                             </div>
-                           )}
-                         </Mutation>
+                            <Mutation
+                              mutation={DELETE_PROJECT}
+                              key={data.User.id}
+                              onCompleted={() =>
+                                this.props.history.push('/projects')
+                              }
+                            >
+                              {(deleteProject, { loading, error }) => (
+                                <div>
+                                  <form
+                                    onSubmit={e => {
+                                      e.preventDefault();
+                                      deleteProject({
+                                        variables: {
+                                          id: data.User.id,
+                                          projects: {
+                                            id: id.toString()
+                                          }
+                                        }
+                                      });
+                                    }}
+                                  >
+                                    &nbsp;
+                                    <button
+                                      type="submit"
+                                      className="btn btn-danger"
+                                    >
+                                      Delete
+                                    </button>
+                                  </form>
+                                  {loading && <p>Loading...</p>}
+                                  {error && <p>Error :( Please try again</p>}
+                                </div>
+                              )}
+                            </Mutation>
                           );
                         });
                         array.map(i => {
@@ -671,10 +641,11 @@ class Project extends Component<any, any> {
                               tableHead={[
                                 'Name',
                                 'description',
-                                'Site',
                                 'technology',
-                                'society',
-                                'actions'
+
+                                'Size',
+                                'Site',
+                                'Progress'
                               ]}
                               tableData={array}
                             />
@@ -693,7 +664,7 @@ class Project extends Component<any, any> {
   }
 }
 
-  Project.propTypes = {
+Project.propTypes = {
   auth: PropTypes.object.isRequired
 };
 const mapStateToProps = state => ({

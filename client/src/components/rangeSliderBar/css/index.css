@@ -1,0 +1,10 @@
+.input-range__label--max,
+.input-range__label--min {
+  display: none;
+}
+
+.range-slider-container {
+  position: relative;
+  top: 50%;
+  margin-top: -8px;
+}

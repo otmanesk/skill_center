@@ -1,10 +1,21 @@
 import { Grid } from '@material-ui/core';
-import avatar from 'assets/img/faces/marc.jpg';
+//import avatar from 'assets/img/faces/marc.jpg';
 import { Button, ItemGrid, ProfileCard, RegularCard } from '../../components';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Query, Mutation } from 'react-apollo';
+import Select from 'react-select';
+import ReactUpload from '../../components/react-images/ReactUpload';
+
+const options = [
+  { value: 'male', label: 'Male' },
+  { value: 'female', label: 'Female' }
+];
+const agencyOptions = [
+  { value: 'rabat', label: 'Rabat' },
+  { value: 'oujda', label: 'Oujda' }
+];
 
 import { gql } from 'apollo-boost';
 
@@ -28,6 +39,10 @@ const UPDATE_USERS = gql`
     $gender: String!
     $birthday: String!
     $email: String!
+    $avatarUrl: String!
+    $address: String!
+    $phone: String!
+    $availability: String!
   ) {
     updateUser(
       id: $id
@@ -38,6 +53,10 @@ const UPDATE_USERS = gql`
       gender: $gender
       birthday: $birthday
       email: $email
+      avatarUrl: $avatarUrl
+      address: $address
+      phone: $phone
+      availability: $availability
     ) {
       id
       name
@@ -47,15 +66,29 @@ const UPDATE_USERS = gql`
       gender
       birthday
       email
+      avatarUrl
+      address
+      phone
+      availability
     }
   }
 `;
-class UserProfile extends Component<any, any> {
+class UserProfile extends React.Component<any, any> {
   static propTypes: {
     auth: PropTypes.Validator<object>;
   };
   render() {
-    let name, username, status, agency, gender, birthday, email;
+    let name,
+      username,
+      status,
+      agency,
+      gender,
+      birthday,
+      email,
+      avatarUrl,
+      address,
+      phone,
+      availability;
     return (
       <div>
         <Grid container>
@@ -96,7 +129,11 @@ class UserProfile extends Component<any, any> {
                                               agency: agency.value,
                                               gender: gender.value,
                                               birthday: birthday.value,
-                                              email: email.value
+                                              email: email.value,
+                                              avatarUrl: avatarUrl.value,
+                                              address: address.value,
+                                              availability: availability.value,
+                                              phone: phone.value
                                             }
                                           });
                                           name.value = '';
@@ -106,6 +143,10 @@ class UserProfile extends Component<any, any> {
                                           gender.value = '';
                                           birthday.value = '';
                                           email.value = '';
+                                          avatarUrl.value = '';
+                                          address.value = '';
+                                          phone.value = '';
+                                          availability.value = '';
                                         }}
                                       >
                                         <div className="form-group">
@@ -155,14 +196,13 @@ class UserProfile extends Component<any, any> {
                                           <label htmlFor="agency">
                                             agency:
                                           </label>
-                                          <input
-                                            type="text"
+                                          <Select
+                                            options={agencyOptions}
                                             className="form-control"
                                             name="agency"
                                             ref={node => {
                                               agency = node;
                                             }}
-                                            placeholder="agency"
                                             defaultValue={data.User.agency}
                                           />
                                         </div>
@@ -170,14 +210,13 @@ class UserProfile extends Component<any, any> {
                                           <label htmlFor="gender">
                                             gender:
                                           </label>
-                                          <input
-                                            type="text"
+                                          <Select
+                                            options={options}
                                             className="form-control"
                                             name="gender"
                                             ref={node => {
                                               gender = node;
                                             }}
-                                            placeholder="gender"
                                             defaultValue={data.User.gender}
                                           />
                                         </div>
@@ -209,7 +248,67 @@ class UserProfile extends Component<any, any> {
                                             defaultValue={data.User.email}
                                           />
                                         </div>
-
+                                        <div className="form-group">
+                                          <label htmlFor="address">
+                                            address:
+                                          </label>
+                                          <input
+                                            type="text"
+                                            className="form-control"
+                                            name="address"
+                                            ref={node => {
+                                              address = node;
+                                            }}
+                                            placeholder="address"
+                                            defaultValue={data.User.address}
+                                          />
+                                        </div>
+                                        <div className="form-group">
+                                          <label htmlFor="phone">phone:</label>
+                                          <input
+                                            type="text"
+                                            className="form-control"
+                                            name="phone"
+                                            ref={node => {
+                                              phone = node;
+                                            }}
+                                            placeholder="phone"
+                                            defaultValue={data.User.phone}
+                                          />
+                                        </div>
+                                        <div className="form-group">
+                                          <label htmlFor="availability">
+                                            availability :
+                                          </label>
+                                          <input
+                                            type="text"
+                                            className="form-control"
+                                            name="availability"
+                                            ref={node => {
+                                              availability = node;
+                                            }}
+                                            placeholder="availability"
+                                            defaultValue={
+                                              data.User.availability
+                                            }
+                                          />
+                                        </div>
+                                        <div className="form-group">
+                                          <label htmlFor="availability">
+                                            upload profile :
+                                          </label>
+                                          <br />
+                                          <input
+                                            type="file"
+                                            className="form-control"
+                                            name="avatarUrl"
+                                            ref={node => {
+                                              avatarUrl = node;
+                                            }}
+                                            placeholder="avatarUrl"
+                                            defaultValue={data.User.avatarUrl}
+                                          />
+                                        </div>
                                         <Button color="primary" type="submit">
                                           Update Profile
                                         </Button>
@@ -240,15 +339,18 @@ class UserProfile extends Component<any, any> {
                 if (error) return `Error! ${error.message}`;
                 return (
                   <ProfileCard
-                    avatar={avatar}
-                    subtitle="CEO / CO-FOUNDER"
+                    avatar={data.User.avatarUrl}
+                    picture={<ReactUpload />}
+                    subtitle={data.User.status}
                     title={data.User.name}
                     // tslint:disable-next-line:max-line-length
                     description={data.User.email}
                     footer={
-                      <Button color="primary" round>
-                        Follow
-                      </Button>
+                      <div>
+                        <Button color="primary" round>
+                          Recommend
+                        </Button>
+                      </div>
                     }
                   />
                 );

@@ -14,6 +14,7 @@ interface Props {
     card: string;
     cardHeader: string;
     cardAvatar: string;
+    cardPicture: string;
     textAlign: string;
     img: string;
     cardTitle: string;
@@ -23,6 +24,7 @@ interface Props {
   };
 
   title?: React.ReactNode;
+  picture?: React.ReactNode;
   subtitle?: React.ReactNode;
   description?: React.ReactNode;
   footer?: React.ReactNode;
@@ -35,6 +37,7 @@ class ProfileCard extends React.Component<Props> {
       classes,
       subtitle,
       title,
+      picture,
       description,
       footer,
       avatar
@@ -50,6 +53,11 @@ class ProfileCard extends React.Component<Props> {
           avatar={<img src={avatar} alt="..." className={classes.img} />}
         />
         <CardContent className={classes.textAlign}>
+          {picture !== undefined ? (
+            <Typography component="h6" className={classes.cardPicture}>
+              {picture}
+            </Typography>
+          ) : null}
           {subtitle !== undefined ? (
             <Typography component="h6" className={classes.cardSubtitle}>
               {subtitle}

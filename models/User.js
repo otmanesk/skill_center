@@ -20,10 +20,11 @@ const UserSchema = new Schema({
   status: String,
   address: String,
   agency: String,
+  avatarUrl: String,
   startDate: Date,
-  phoneNumber: String,
+  phone: String,
   gender: String,
-  disponibility: false,
+  availability: String,
   birthday: Date,
   projects: [
     {
@@ -32,33 +33,42 @@ const UserSchema = new Schema({
       technology: String,
       society: String,
       size: String,
-      Site: String,
+      site: String,
       startDate: Date,
-      EndDate: Date,
+      endDate: Date,
       status: String,
-      Progress: String
+      progress: String
     }
   ],
-  formationsfollowed: [
+  trainingFollowed: [
     {
       name: String,
-      Type: String,
-      Site: String,
-      EndDate: Date,
-      Rank: String,
+      type: String,
+      site: String,
+      endDate: Date,
+      rank: String,
       startDate: Date,
-      Formateur: String
+      former: String
     }
   ],
-  formations: [
+  trainings: [
     {
       name: String,
-      Type: String,
-      Site: String,
-      EndDate: Date,
-      Rank: String,
+      type: String,
+      site: String,
+      endDate: Date,
+      rank: String,
       startDate: Date,
-      Formateur: String
+      former: String
+    }
+  ],
+  education: [
+    {
+      school: String,
+      university: String,
+      diploma: String,
+      trainings: String,
+      certification: String
     }
   ],
   role: [
